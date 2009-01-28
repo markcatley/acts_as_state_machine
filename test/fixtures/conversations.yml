@@ -9,3 +9,9 @@ second:
   state_machine: read
   subject: Foo
   closed: false
+
+third:
+  id: 3
+  state_machine: needs_attention
+  subject: Bar
+  closed: false
