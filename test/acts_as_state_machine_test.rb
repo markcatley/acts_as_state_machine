@@ -201,6 +201,28 @@ class ActsAsStateMachineTest < Test::Unit::TestCase
     assert_equal cnt0, cnt
   end
   
+  def test_state_has_named_scope
+    cs = Conversation.read.all
+    assert_equal 2, cs.size
+    
+    c = Conversation.read.first
+    assert_equal conversations(:first).id, c.id
+  end
+  
+  def test_count_using_named_scope
+    cnt0 = Conversation.count(:conditions => ['state_machine = ?', 'read'])
+    cnt  = Conversation.read.count
+    
+    assert_equal cnt0, cnt
+  end
+  
+  def test_count_using_named_scopes_with_conditions
+    cnt0 = Conversation.count(:conditions => ['state_machine = ? AND subject = ?', 'read', 'Foo'])
+    cnt  = Conversation.read.count(:conditions => ['subject = ?', 'Foo'])
+    
+    assert_equal cnt0, cnt
+  end
+  
   def test_find_in_invalid_state_raises_exception
     assert_raise(InvalidState) {
       Conversation.find_in_state(:all, :dead)

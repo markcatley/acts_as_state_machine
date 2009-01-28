@@ -218,6 +218,7 @@ module ScottBarron                   #:nodoc:
           read_inheritable_attribute(:states)[name.to_sym] = state
         
           define_method("#{state.name}?") { current_state == state.name }
+          named_scope state.name, :conditions => {state_column.to_sym => state.name.to_s}
         end
         
         # Wraps ActiveRecord::Base.find to conveniently find all records in
