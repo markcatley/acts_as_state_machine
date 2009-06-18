@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/test_helper'
 
-class ActsAsStateMachineTest < Test::Unit::TestCase
+class ActsAsStateMachineTest < ActiveSupport::TestCase
   
   def test_no_initial_value_raises_exception
     assert_raise(NoInitialState) {

@@ -1,24 +1,22 @@
-$:.unshift(File.dirname(__FILE__) + '/../lib')
-RAILS_ROOT = File.dirname(__FILE__)
-
+RAILS_ROOT = File.join(File.dirname(__FILE__), '..')
 require 'rubygems'
-require 'test/unit'
-require 'active_support'
 require 'active_record'
-require 'active_record/fixtures'
-require "#{File.dirname(__FILE__)}/../init"
+require 'action_controller'
+require 'test_help'
+
+require File.join(File.dirname(__FILE__), *%w(.. init))
 include ScottBarron::Acts::StateMachine
 
-ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")
-ActiveRecord::Base.configurations = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
+ActiveRecord::Base.logger = Logger.new(File.join(File.dirname(__FILE__), 'debug.log'))
+ActiveRecord::Base.configurations = YAML::load(IO.read(File.join(File.dirname(__FILE__), 'database.yml')))
 ActiveRecord::Base.establish_connection(ENV['DB'] || 'sqlite3')
 
-load(File.dirname(__FILE__) + "/schema.rb") if File.exist?(File.dirname(__FILE__) + "/schema.rb")
+load(File.join(File.dirname(__FILE__), 'schema.rb')) if File.exist?(File.join(File.dirname(__FILE__), 'schema.rb'))
 
-Test::Unit::TestCase.fixture_path = File.dirname(__FILE__) + "/fixtures"
-$:.unshift(Test::Unit::TestCase.fixture_path)
+ActiveSupport::TestCase.fixture_path = File.join(File.dirname(__FILE__), 'fixtures')
+Dir[File.join(ActiveSupport::TestCase.fixture_path, '*.rb')].each { |file| require file }
 
-class Test::Unit::TestCase #:nodoc:
+class ActiveSupport::TestCase #:nodoc:
   fixtures :all
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
