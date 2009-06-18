@@ -125,13 +125,14 @@ module ScottBarron                   #:nodoc:
           
           self.send(:include, ScottBarron::Acts::StateMachine::InstanceMethods)
 
-          before_create               :set_initial_state
+          alias_method_chain          :initialize, :set_initial_state
           after_create                :run_initial_state_actions
         end
       end
       
       module InstanceMethods
-        def set_initial_state #:nodoc:
+        def initialize_with_set_initial_state(*args, &block) #:nodoc:
+          initialize_without_set_initial_state(*args, &block)
           write_attribute self.class.state_column, self.class.initial_state.to_s
         end
 

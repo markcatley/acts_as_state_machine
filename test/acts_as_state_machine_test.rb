@@ -240,4 +240,12 @@ class ActsAsStateMachineTest < ActiveSupport::TestCase
     assert_equal :junk, event.name
     assert_equal "finished", event.opts[:note]
   end
+  
+  def test_should_set_initial_state_on_init
+    assert_equal :needs_attention, Conversation.new.current_state
+  end
+  
+  def test_first_conversations_state_should_be_read
+    assert_equal :read, conversations(:first).current_state
+  end
 end
