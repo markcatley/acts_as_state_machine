@@ -216,7 +216,10 @@ module ScottBarron                   #:nodoc:
         def state(name, opts={})
           state = SupportingClasses::State.new(name.to_sym, opts)
           read_inheritable_attribute(:states)[name.to_sym] = state
-        
+          
+          #add magick to define named scope for this state
+          self.send(:named_scope, name, :conditions => {self.state_column.to_sym => name.to_s})  
+          
           define_method("#{state.name}?") { current_state == state.name }
           named_scope state.name, :conditions => {state_column.to_sym => state.name.to_s}
         end
